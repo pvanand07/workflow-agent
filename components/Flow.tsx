@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import { useAgentContext } from "@/context/AgentContext";
+import React, { useCallback, useEffect } from "react";
 import ReactFlow, {
 	ReactFlowProvider,
 	useNodesState,
@@ -7,6 +8,7 @@ import ReactFlow, {
 	Controls,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { AgentPrompt } from "./AgentPrompt";
 
 const initialNodes = [
 	{
@@ -31,29 +33,34 @@ const initialEdges = [
 ];
 
 const Flow = () => {
-	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-	const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-	const onConnect = useCallback(
-		(params) => setEdges((els) => addEdge(params, els)),
-		[],
-	);
+	const {
+		setEdges,
+		setNodes,
+		nodes,
+		edges,
+		onConnect,
+		onNodesChange,
+		onEdgesChange,
+	} = useAgentContext();
 
 	return (
-		<div>
-			<ReactFlowProvider>
-				<div style={{ width: "100vw", height: "100vh" }}>
-					<ReactFlow
-						nodes={nodes}
-						edges={edges}
-						onNodesChange={onNodesChange}
-						onEdgesChange={onEdgesChange}
-						onConnect={onConnect}
-						fitView
-					>
-						<Controls />
-					</ReactFlow>
-				</div>
-			</ReactFlowProvider>
+		<div
+			className="relative flex justify-center items-center"
+			style={{ width: "100vw", height: "100vh" }}
+		>
+			<div className="absolute z-50 bottom-10">
+				<AgentPrompt />
+			</div>
+			<ReactFlow
+				nodes={nodes}
+				edges={edges}
+				onNodesChange={onNodesChange}
+				onEdgesChange={onEdgesChange}
+				onConnect={onConnect}
+				fitView
+			>
+				<Controls />
+			</ReactFlow>
 		</div>
 	);
 };
