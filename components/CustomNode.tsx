@@ -2,6 +2,7 @@ import React, { FormEvent, memo, useState } from "react";
 import { Edge, Handle, Node, Position } from "reactflow";
 import { getId } from "./Flow";
 import { useAgentContext } from "@/context/AgentContext";
+import { useLayout } from "@/hooks/useLayout";
 
 interface CustomNodeProps {
 	data: any;
@@ -11,6 +12,8 @@ interface CustomNodeProps {
 const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 	const [loading, setLoading] = useState(false);
 	const { setNodes, setEdges } = useAgentContext();
+	const { onLayout } = useLayout();
+
 	async function handleNext(e: FormEvent) {
 		e.preventDefault();
 		let nodes: Node[] = [];

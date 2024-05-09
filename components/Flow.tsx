@@ -11,6 +11,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { AgentPrompt } from "./AgentPrompt";
 import CustomNode from "./CustomNode";
+import { useLayout } from "@/hooks/useLayout";
 
 const nodeTypes: NodeTypes = {
 	custom: CustomNode,
@@ -51,13 +52,29 @@ const Flow = () => {
 		onEdgesChange,
 	} = useAgentContext();
 
+	const { onLayout } = useLayout();
+
 	return (
 		<div
 			className="relative flex justify-center items-center"
 			style={{ width: "100vw", height: "100vh" }}
 		>
-			<div className="absolute z-50 bottom-10">
+			<div className="absolute z-50 bottom-10 flex flex-col gap-2">
 				<AgentPrompt />
+				<div className="flex gap-4">
+					<button
+						className="p-2 rounded-md bg-neutral-500 text-white"
+						onClick={() => onLayout("LR")}
+					>
+						Horizontal
+					</button>
+					<button
+						className="p-2 rounded-md bg-neutral-500 text-white"
+						onClick={() => onLayout("TB")}
+					>
+						Vertical
+					</button>
+				</div>
 			</div>
 			<ReactFlow
 				nodeTypes={nodeTypes}

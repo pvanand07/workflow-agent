@@ -2,11 +2,13 @@ import { useAgentContext } from "@/context/AgentContext";
 import { FormEvent, useState } from "react";
 import { getId } from "./Flow";
 import { Edge, Node } from "reactflow";
+import { useLayout } from "@/hooks/useLayout";
 
 export const AgentPrompt = () => {
 	const [prompt, setPrompt] = useState("");
 	const [loading, setLoading] = useState(false);
 	const { setEdges, setNodes } = useAgentContext();
+	const { onLayout } = useLayout();
 
 	async function handlePrompt(e: FormEvent) {
 		e.preventDefault();
