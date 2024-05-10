@@ -1,8 +1,8 @@
-import React, { FormEvent, memo, useState } from "react";
-import { Edge, Handle, Node, Position } from "reactflow";
+import React, { FormEvent, memo, useEffect, useState } from "react";
+import { Edge, Handle, Node, Position, useReactFlow } from "reactflow";
 import { getId } from "./Flow";
 import { useAgentContext } from "@/context/AgentContext";
-import { useLayout } from "@/hooks/useLayout";
+import { getLayoutedElements, useLayout } from "@/hooks/useLayout";
 
 interface CustomNodeProps {
 	data: any;
@@ -13,6 +13,15 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 	const [loading, setLoading] = useState(false);
 	const { setNodes, setEdges } = useAgentContext();
 	const { onLayout } = useLayout();
+	const { fitView } = useReactFlow();
+
+	useEffect(() => {
+		if (!loading) {
+			window.requestAnimationFrame(() => {
+				fitView();
+			});
+		}
+	}, [loading]);
 
 	async function handleNext(e: FormEvent) {
 		e.preventDefault();
@@ -39,7 +48,6 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 				const newNode = {
 					id: getId(),
 					type: "custom",
-					position: { x: 1000, y: i * 100 },
 					data: { label: item, prevQueries: [...data.prevQueries, data.label] },
 				};
 				nodes.push(newNode);
@@ -53,11 +61,12 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 
 				edges.push(edge);
 			});
+			const layouted = getLayoutedElements(nodes, edges, { direction: "LR" });
 			setNodes((prev) => {
-				return [...prev, ...nodes];
+				return [...prev, ...layouted.nodes];
 			});
 			setEdges((prev) => {
-				return [...prev, ...edges];
+				return [...prev, ...layouted.edges];
 			});
 		} catch (error) {
 			console.log(error);

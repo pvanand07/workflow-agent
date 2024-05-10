@@ -1,14 +1,22 @@
 import { useAgentContext } from "@/context/AgentContext";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { getId } from "./Flow";
-import { Edge, Node } from "reactflow";
-import { useLayout } from "@/hooks/useLayout";
+import { Edge, Node, useReactFlow } from "reactflow";
+import { getLayoutedElements, useLayout } from "@/hooks/useLayout";
 
 export const AgentPrompt = () => {
 	const [prompt, setPrompt] = useState("");
 	const [loading, setLoading] = useState(false);
 	const { setEdges, setNodes } = useAgentContext();
 	const { onLayout } = useLayout();
+	const { fitView } = useReactFlow();
+	useEffect(() => {
+		if (!loading) {
+			window.requestAnimationFrame(() => {
+				fitView();
+			});
+		}
+	}, [loading]);
 
 	async function handlePrompt(e: FormEvent) {
 		e.preventDefault();
@@ -34,7 +42,6 @@ export const AgentPrompt = () => {
 			const firstNode = {
 				id: getId(),
 				type: "custom",
-				position: { x: 100, y: 100 },
 				data: { label: prompt, prevQueries: [] },
 			};
 			nodes.push(firstNode);
@@ -43,7 +50,6 @@ export const AgentPrompt = () => {
 				const newNode = {
 					id: getId(),
 					type: "custom",
-					position: { x: 500, y: i * 100 },
 					data: { label: item, prevQueries: [prompt] },
 				};
 				nodes.push(newNode);
@@ -57,8 +63,10 @@ export const AgentPrompt = () => {
 
 				edges.push(edge);
 			});
-			setNodes(nodes);
-			setEdges(edges);
+			const layouted = getLayoutedElements(nodes, edges, { direction: "LR" });
+
+			setNodes([...layouted.nodes]);
+			setEdges([...layouted.edges]);
 		} catch (error) {
 			console.log(error);
 		} finally {
