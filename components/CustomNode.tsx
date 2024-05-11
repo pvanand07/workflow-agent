@@ -44,11 +44,15 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 			const result = await response.json();
 			console.log(result);
 
-			result.topics.forEach((item: string, i: number) => {
+			result.topics.forEach((item: string[], i: number) => {
 				const newNode = {
 					id: getId(),
 					type: "custom",
-					data: { label: item, prevQueries: [...data.prevQueries, data.label] },
+					data: {
+						label: item[0],
+						prevQueries: [...data.prevQueries, data.label],
+						desc: item[1],
+					},
 				};
 				nodes.push(newNode);
 

@@ -42,15 +42,15 @@ export const AgentPrompt = () => {
 			const firstNode = {
 				id: getId(),
 				type: "custom",
-				data: { label: prompt, prevQueries: [] },
+				data: { label: prompt, prevQueries: [], desc: "" },
 			};
 			nodes.push(firstNode);
 
-			data.topics.forEach((item: string, i: number) => {
+			data.topics.forEach((item: string[], i: number) => {
 				const newNode = {
 					id: getId(),
 					type: "custom",
-					data: { label: item, prevQueries: [prompt] },
+					data: { label: item[0], prevQueries: [prompt], desc: item[1] },
 				};
 				nodes.push(newNode);
 
