@@ -2,6 +2,7 @@
 
 import Flow from "@/components/Flow";
 import { AgentContextProvider } from "@/context/AgentContext";
+import { ModalProvider } from "@/context/ModalContext";
 import { ReactFlowProvider } from "reactflow";
 
 export default function Home() {
@@ -9,7 +10,9 @@ export default function Home() {
 		<main className="w-full h-screen">
 			<ReactFlowProvider>
 				<AgentContextProvider>
-					<Flow />
+					<ModalProvider>
+						<Flow />
+					</ModalProvider>
 				</AgentContextProvider>
 			</ReactFlowProvider>
 		</main>

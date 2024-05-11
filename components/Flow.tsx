@@ -12,6 +12,7 @@ import "reactflow/dist/style.css";
 import { AgentPrompt } from "./AgentPrompt";
 import CustomNode from "./CustomNode";
 import { useLayout } from "@/hooks/useLayout";
+import { Modal } from "./Modal";
 
 const nodeTypes: NodeTypes = {
 	custom: CustomNode,
@@ -59,6 +60,7 @@ const Flow = () => {
 			className="relative flex justify-center items-center"
 			style={{ width: "100vw", height: "100vh" }}
 		>
+			<Modal />
 			<div className="absolute z-50 bottom-10 flex flex-col gap-2">
 				<AgentPrompt />
 				<div className="flex gap-4">

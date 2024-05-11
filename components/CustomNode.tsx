@@ -3,6 +3,7 @@ import { Edge, Handle, Node, Position, useReactFlow } from "reactflow";
 import { getId } from "./Flow";
 import { useAgentContext } from "@/context/AgentContext";
 import { getLayoutedElements, useLayout } from "@/hooks/useLayout";
+import { useModal } from "@/context/ModalContext";
 
 interface CustomNodeProps {
 	data: any;
@@ -14,6 +15,7 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 	const { setNodes, setEdges } = useAgentContext();
 	const { onLayout } = useLayout();
 	const { fitView } = useReactFlow();
+	const { openModal } = useModal();
 
 	useEffect(() => {
 		if (!loading) {
@@ -90,6 +92,13 @@ const CustomNode: React.FC<CustomNodeProps> = memo(({ id, data }) => {
 			<div className="bg-neutral-700 p-2 rounded-md flex gap-5">
 				<h1>{id}</h1>
 				<h1>{data.label}</h1>
+
+				<button
+					className="p-1 rounded-md bg-black text-white"
+					onClick={() => openModal(id)}
+				>
+					info
+				</button>
 				<button
 					className="p-1 rounded-md bg-black text-white"
 					onClick={handleNext}
